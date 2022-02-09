@@ -42,11 +42,22 @@ public class CertificatestatusService {
      }
 
      public List<Certificatestatus> getCert(String certType){
-          Optional<Certificate> certificate = certificateRepository.findCertByType(certType);
+          Optional<Certificate> cert = certificateRepository.findCertByType(certType);
 
-          return certificatestatusRepository.findCertificatestatusByCertificate(certificate.get());
+          return certificatestatusRepository.findCertificatestatusByCertificate(cert.get());
 
      }
+
+
+     public List<Certificatestatus> getUsersCert(String username){
+          Optional<Certuser> certuser = certuserRepository.findUserByUsername(username);
+
+          return certificatestatusRepository.findCertificatestatusByCertuser(certuser.get());
+
+     }
+
+
+
 
    /*  public void addCertstatus(Certificatestatus certificatestatus){
           certificatestatusRepository.save(certificatestatus);

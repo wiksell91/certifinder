@@ -1,5 +1,6 @@
 package com.example.certifinder.repository;
 
+import com.example.certifinder.model.Certificate;
 import com.example.certifinder.model.Certuser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,4 +19,6 @@ public interface CertuserRepository extends JpaRepository<Certuser, Long> {
             "WHERE c.email = ?1"
     )
     Boolean selectExistsEmail(String email);
+
+    Optional<Certuser> findUserByUsername(String username);
 }

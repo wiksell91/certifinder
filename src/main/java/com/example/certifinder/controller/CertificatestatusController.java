@@ -26,9 +26,14 @@ public class CertificatestatusController {
     }
 
 
-    @GetMapping("/{certType}")
+    @GetMapping("/cert/{certType}")
     public List<Certificatestatus> getCert(@PathVariable("certType") String certType){
         return certificatestatusService.getCert(certType);
+    }
+
+    @GetMapping("/user/{username}")
+    public List<Certificatestatus> getUsersCert(@PathVariable("username") String username){
+        return certificatestatusService.getUsersCert(username);
     }
 
     @PostMapping("/addstatus/user/{certuserId}/cert/{certificateId}")
@@ -36,17 +41,6 @@ public class CertificatestatusController {
         certificatestatusService.addCertstatus(certificatestatus, certuserId, certificateId);
     }
 
-/*   @PutMapping("/{certicicatestatusId}/certusers/{certuserId}")
-    Certificatestatus addCertuserToStatus(@PathVariable("certicicatestatusId") Long certicicatestatusId,
-                                         @PathVariable("certuserId") Long certuserId){
-        return addCertuserToStatus(certicicatestatusId, certuserId);
 
-    }
-    @PutMapping("/{certicicatestatusId}/certificates/{certificateId}")
-    Certificatestatus addCertToStatus(@PathVariable("certicicatestatusId") Long certicicatestatusId,
-                                          @PathVariable("certificateId") Long certificateId){
-        return addCertToStatus(certicicatestatusId, certificateId);
-
-    }*/
 
 }

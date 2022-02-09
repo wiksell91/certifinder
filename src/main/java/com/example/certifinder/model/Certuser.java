@@ -27,6 +27,8 @@ public class Certuser {
     private Long id;
    // @Column(nullable = false, unique = true)
     private String email;
+    @Column(nullable = false, unique = true)
+    private String username;
     //@Column(nullable = false)
     private String password;
     //@Column(nullable = false)
@@ -38,7 +40,7 @@ public class Certuser {
     private Integer age;
     //@Column(nullable = false)
     private String city;
-    private String generalinfo;
+
 
     @OneToMany(mappedBy = "certuser",
             cascade = CascadeType.ALL,
@@ -52,14 +54,14 @@ public class Certuser {
     private List<Orderreq> orderreqs = new ArrayList<>();
 
 
-    public Certuser(String email, String password, String name, Role role, Integer age, String city, String generalinfo, List<Certificatestatus> certificatestatus, List<Orderreq> orderreqs) {
+    public Certuser(String email, String password, String username, String name, Role role, Integer age, String city, List<Certificatestatus> certificatestatus, List<Orderreq> orderreqs) {
         this.email = email;
         this.password = password;
+        this.username = username;
         this.name = name;
         this.role = role;
         this.age = age;
         this.city = city;
-        this.generalinfo = generalinfo;
         this.certificatestatus = certificatestatus;
         this.orderreqs = orderreqs;
     }
@@ -81,6 +83,14 @@ public class Certuser {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -123,13 +133,7 @@ public class Certuser {
         this.city = city;
     }
 
-    public String getGeneralinfo() {
-        return generalinfo;
-    }
 
-    public void setGeneralinfo(String generalinfo) {
-        this.generalinfo = generalinfo;
-    }
 
     public void setCertificatestatus(List<Certificatestatus> certificatestatus) {
         this.certificatestatus = certificatestatus;

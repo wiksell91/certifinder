@@ -36,6 +36,10 @@ public class Orderreq {
     private LocalDate orderdate;
 
 
+
+    public Orderreq() {
+    }
+
     public Orderreq(Certuser certuser, Company company, String ordertype, String comment, LocalDate orderdate) {
         this.id = id;
         this.certuser = certuser;
@@ -45,8 +49,7 @@ public class Orderreq {
         this.orderdate = orderdate;
     }
 
-    public Orderreq() {
-    }
+
 
     public Long getId() {
         return id;

@@ -1,9 +1,12 @@
 package com.example.certifinder.repository;
 
+
 import com.example.certifinder.model.Company;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 public interface CompanyRepository extends JpaRepository<Company, Long> {
@@ -23,4 +26,6 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
             "WHERE o.orgnumber = ?1"
     )
     Boolean selectExistsOrgnumber(String orgnumber);
+
+    Optional<Company> findCompanyByCompanyname(String companyname);
 }
