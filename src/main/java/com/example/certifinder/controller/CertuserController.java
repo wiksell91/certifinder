@@ -32,4 +32,9 @@ public class CertuserController {
     public void addCertuser(@RequestBody Certuser certuser){
         certuserService.addCertuser(certuser);
     }
+
+    @DeleteMapping(path = "/{certuserId}")
+    public void deleteCertuser(@PathVariable("certuserId") Long certuserId){
+        certuserService.deleteCertuser(certuserId);
+    }
 }

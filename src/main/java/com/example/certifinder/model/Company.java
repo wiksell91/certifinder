@@ -10,7 +10,7 @@ import java.util.List;
 
 @Table
 @Entity
-public class Company {
+public class  Company {
     @Id
     @SequenceGenerator(
             name = "company_sequence",

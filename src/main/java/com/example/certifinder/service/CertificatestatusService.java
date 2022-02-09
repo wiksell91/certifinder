@@ -6,9 +6,7 @@ import com.example.certifinder.model.Certuser;
 import com.example.certifinder.repository.CertificateRepository;
 import com.example.certifinder.repository.CertificatestatusRepository;
 import com.example.certifinder.repository.CertuserRepository;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,10 +41,12 @@ public class CertificatestatusService {
           certificatestatusRepository.save(certificatestatus);
      }
 
-//     public Optional<Certificatestatus> getCert(String certType){
-//          Optional<Certificate> certificate = certificateRepository.findCertByType(certType);
-//          return certificatestatusRepository.findCertList(certificate.get().getId());
-//     }
+     public List<Certificatestatus> getCert(String certType){
+          Optional<Certificate> certificate = certificateRepository.findCertByType(certType);
+
+          return certificatestatusRepository.findCertificatestatusByCertificate(certificate.get());
+
+     }
 
    /*  public void addCertstatus(Certificatestatus certificatestatus){
           certificatestatusRepository.save(certificatestatus);

@@ -9,8 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface CertuserRepository extends JpaRepository<Certuser, Long> {
-    //Optional<Certuser> findUserByUsername(String username);
-
 
 
     @Query("" +

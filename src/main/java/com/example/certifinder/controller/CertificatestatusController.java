@@ -1,18 +1,11 @@
 package com.example.certifinder.controller;
 
-import com.example.certifinder.model.Certificate;
 import com.example.certifinder.model.Certificatestatus;
-import com.example.certifinder.model.Certuser;
-import com.example.certifinder.service.CertificateService;
 import com.example.certifinder.service.CertificatestatusService;
-import com.example.certifinder.service.CertuserService;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @RestController
@@ -33,10 +26,10 @@ public class CertificatestatusController {
     }
 
 
-//    @GetMapping("/{certType}")
-//    public Optional<Certificatestatus> getCert(@PathVariable("certType") String certType){
-//        return certificatestatusService.getCert(certType);
-//    }
+    @GetMapping("/{certType}")
+    public List<Certificatestatus> getCert(@PathVariable("certType") String certType){
+        return certificatestatusService.getCert(certType);
+    }
 
     @PostMapping("/addstatus/user/{certuserId}/cert/{certificateId}")
     public void addCertstatus(@RequestBody Certificatestatus certificatestatus, @PathVariable("certuserId") Long certuserId, @PathVariable("certificateId") Long certificateId){

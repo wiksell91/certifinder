@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 
-
+@ToString
 @Entity
 @Table
 public class Certificatestatus {
@@ -36,6 +36,9 @@ public class Certificatestatus {
     private String regnumber;
     private String generalinfo;
 
+    public Certificatestatus() {
+    }
+
     public Certificatestatus(LocalDate validto, String regnumber, Certuser certuser, Certificate certificate, String generalinfo) {
         this.validto = validto;
         this.regnumber = regnumber;
@@ -45,8 +48,6 @@ public class Certificatestatus {
 
     }
 
-    public Certificatestatus() {
-    }
 
     public Long getId() {
         return id;
