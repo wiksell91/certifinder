@@ -28,7 +28,7 @@ public class CertuserController {
     }
 
 
-    @PostMapping
+    @PostMapping("/add")
     public void addCertuser(@RequestBody Certuser certuser){
         certuserService.addCertuser(certuser);
     }

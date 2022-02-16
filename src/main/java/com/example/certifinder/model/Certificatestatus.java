@@ -39,7 +39,7 @@ public class Certificatestatus {
     public Certificatestatus() {
     }
 
-    public Certificatestatus(LocalDate validto, String regnumber, Certuser certuser, Certificate certificate, String generalinfo) {
+        public Certificatestatus(LocalDate validto, String regnumber, Certuser certuser, Certificate certificate, String generalinfo) {
         this.validto = validto;
         this.regnumber = regnumber;
         this.certuser = certuser;
