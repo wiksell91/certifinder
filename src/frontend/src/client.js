@@ -18,3 +18,7 @@ export const gettAllCertusers = () =>
 export const getAllCert = () =>
     fetch("api/v1/certstatus")
     .then(checkStatus)
+
+export const getAllOrders = () =>
+    fetch("/api/v1/orderreq")
+    .then(checkStatus)
