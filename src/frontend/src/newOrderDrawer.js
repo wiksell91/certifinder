@@ -41,11 +41,12 @@ function newOrderDrawer({showDrawer, setShowDrawer}) {
             <Row gutter={16}>
                 <Col span={12}>
                     <Form.Item
-                        name="name"
-                        label="Name"
-                        rules={[{required: true, message: 'Please enter student name'}]}
+                        name="orderstatus"
+                        label="status"
                     >
-                        <Input placeholder="Please enter student name"/>
+                        <Select>
+                            <Option value="OBESVARAD">Obesvarad</Option>
+                        </Select>
                     </Form.Item>
                 </Col>
                 <Row gutter={16}>
@@ -55,7 +56,7 @@ function newOrderDrawer({showDrawer, setShowDrawer}) {
                         label="Ordertyp"
                         rules={[{required: true, message: 'Vänligen välj ordertyp'}]}
                     >
-                        <Select placeholder="Please select a gender">
+                        <Select placeholder="Vänligen välj ordertyp">
                             <Option value="tungalyft">Tungalyft</Option>
                             <Option value="Lastbil">Lastbil</Option>
                             <Option value="Truck">Truck</Option>

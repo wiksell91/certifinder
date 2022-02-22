@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react'
 
-import {Empty, Layout, Menu, Spin, Table} from 'antd';
+import {Button, Empty, Layout, Menu, Spin, Table, Radio} from 'antd';
 import {
     ContactsOutlined,
     LoadingOutlined,
@@ -11,11 +11,27 @@ import {
 } from '@ant-design/icons';
 import {getAllCert, getAllOrders, gettAllCertusers} from "./client";
 import './App.css';
-
+import newOrderDrawer from "./newOrderDrawer";
+import {addNewOrder} from "./client";
 const {Header, Content, Footer, Sider} = Layout;
 
+
+
+
+const newOrder = (certuserId, orderreq, callback) => {
+    addNewOrder(certuserId).then(() => {
+        callback();
+    }).catch(err => {
+        err.response.json().then(res => {
+            console.log(res);
+
+        });
+    })
+}
+
+
 // Columns/table
-const users = [
+const users = fetchCertificatestatus => [
     {
         title: 'Namn',
         dataIndex: ['certuser', 'name'],
@@ -46,6 +62,19 @@ const users = [
         dataIndex: 'validto',
         key: 'validto',
     },
+    {
+        title: 'Action',
+        key: 'action',
+        render: (text, certificatestatus) =>
+            <Radio.Group>
+                <Button style={{marginLeft: '5px'}} type='primary' onClick={() => setShowDrawer(!showDrawer)}>Boka</Button>
+                return <newOrderDrawer
+                    showDrawer={showDrawer}
+                    setShowDrawer={setShowDrawer}
+                    fetchCertificatestatus={fetchCertificatestatus}
+                />
+                </Radio.Group>
+    }
 
 ];
 
@@ -85,6 +114,7 @@ const antIcon = <LoadingOutlined style={{ fontSize: 24}} spin />;
     const [orderreqs, setOrderreqs] = useState([]);
     const [certificatestatus, setCertificatestatus] = useState([]);
     const [fetching, setFetching] = useState(true);
+    const [showDrawer, setShowDrawer] = useState(false);
 
     const fetchCertificatestatus = () =>
         getAllCert()
@@ -105,6 +135,7 @@ const antIcon = <LoadingOutlined style={{ fontSize: 24}} spin />;
         if (certificatestatus.length <= 0) {
             return <Empty />;
         }
+
         return <Table dataSource={certificatestatus}
                       columns={users}
                       bordered

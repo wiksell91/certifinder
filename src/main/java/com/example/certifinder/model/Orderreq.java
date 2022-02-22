@@ -30,7 +30,7 @@ public class Orderreq {
     @ManyToOne
     @JoinColumn(name = "company_id")
     public Company company;
-
+    private Orderstatus orderstatus;
     private String ordertype;
     private String comment;
     private LocalDate orderdate;
@@ -40,16 +40,24 @@ public class Orderreq {
     public Orderreq() {
     }
 
-    public Orderreq(Certuser certuser, Company company, String ordertype, String comment, LocalDate orderdate) {
+    public Orderreq(Certuser certuser, Company company, String ordertype,Orderstatus orderstatus, String comment, LocalDate orderdate) {
         this.id = id;
         this.certuser = certuser;
         this.company = company;
         this.ordertype = ordertype;
         this.comment = comment;
         this.orderdate = orderdate;
+        this.orderstatus = orderstatus;
     }
 
 
+    public Orderstatus getOrderstatus() {
+        return orderstatus;
+    }
+
+    public void setOrderstatus(Orderstatus orderstatus) {
+        this.orderstatus = orderstatus;
+    }
 
     public Long getId() {
         return id;
