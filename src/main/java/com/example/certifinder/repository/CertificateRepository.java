@@ -2,13 +2,10 @@ package com.example.certifinder.repository;
 
 
 import com.example.certifinder.model.Certificate;
-import com.example.certifinder.model.Certificatestatus;
-import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
 import java.util.Optional;
 
 

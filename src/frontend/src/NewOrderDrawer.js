@@ -1,20 +1,44 @@
-import {Drawer, Input, Col, Select, Form, Row, Button} from 'antd';
+import {Drawer, Input, Col, Select, Form, Row, Button, Spin} from 'antd';
 import TextArea from "antd/es/input/TextArea";
+import {LoadingOutlined} from "@ant-design/icons";
+import {useState} from 'react';
+import {addNewOrder} from "./client";
+import {successNotification, errorNotification} from "./Notification";
 
 const {Option} = Select;
 
-function newOrderDrawer({showDrawer, setShowDrawer}) {
-    const onCLose = () => setShowDrawer(false);
+const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
-    const onFinish = values => {
-        alert(JSON.stringify(values, null, 2));
+function NewOrderDrawer({showDrawer, setShowDrawer, fetchCertuser}) {
+    const onCLose = () => setShowDrawer(false);
+    const [submitting, setSubmitting] = useState(false);
+
+
+    const onFinish = (certuserId, orderreq) => {
+        setSubmitting(true)
+        addNewOrder(certuserId, orderreq)
+            .then(() => {
+                console.log("student added")
+                onCLose();
+                successNotification(
+                    "Student successfully added"
+                )
+                fetchCertuser();
+            }).catch(err => {
+            console.log(err)
+        }).finally(() => {
+            setSubmitting(false);
+        })
     };
+
+
+
+
 
     const onFinishFailed = errorInfo => {
         alert(JSON.stringify(errorInfo, null, 2));
     };
     const { TextArea } = Input;
-
 
     return <Drawer
         title="Skapa ny förfrågan"
@@ -85,8 +109,11 @@ function newOrderDrawer({showDrawer, setShowDrawer}) {
                     </Form.Item>
                 </Col>
             </Row>
+            <Row>
+                {submitting && <Spin indicator={antIcon} />}
+            </Row>
         </Form>
     </Drawer>
 }
 
-export default newOrderDrawer;
+export default NewOrderDrawer;

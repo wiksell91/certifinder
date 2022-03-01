@@ -35,7 +35,7 @@ public class Certificate {
             mappedBy = "certificate",
                     cascade = CascadeType.ALL,
                     orphanRemoval = true)
-            private List<Certificatestatus> certificatestats = new ArrayList<>();
+            private List<Certstatus> certificatestats = new ArrayList<>();
 
 
     public Certificate() {
@@ -70,7 +70,7 @@ public class Certificate {
         this.bransch = bransch;
     }
 
-    public void setCertificatestats(List<Certificatestatus> certificatestats) {
+    public void setCertificatestats(List<Certstatus> certificatestats) {
         this.certificatestats = certificatestats;
     }
 }

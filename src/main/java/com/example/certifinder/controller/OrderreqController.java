@@ -1,6 +1,5 @@
 package com.example.certifinder.controller;
 
-import com.example.certifinder.model.Certificatestatus;
 import com.example.certifinder.model.Orderreq;
 import com.example.certifinder.service.OrderreqService;
 import org.springframework.beans.factory.annotation.Autowired;

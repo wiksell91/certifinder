@@ -6,7 +6,6 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @ToString
 @Entity
@@ -45,7 +44,7 @@ public class Certuser {
     @OneToMany(mappedBy = "certuser",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
-    private List<Certificatestatus> certificatestatus = new ArrayList<>();
+    private List<Certstatus> certstatuses = new ArrayList<>();
 
 
     @OneToMany(mappedBy = "certuser",
@@ -54,7 +53,7 @@ public class Certuser {
     private List<Orderreq> orderreqs = new ArrayList<>();
 
 
-    public Certuser(String email, String password, String username, String name, Role role, Integer age, String city, List<Certificatestatus> certificatestatus, List<Orderreq> orderreqs) {
+    public Certuser(String email, String password, String username, String name, Role role, Integer age, String city, List<Certstatus> certstatuses, List<Orderreq> orderreqs) {
         this.email = email;
         this.password = password;
         this.username = username;
@@ -62,7 +61,7 @@ public class Certuser {
         this.role = role;
         this.age = age;
         this.city = city;
-        this.certificatestatus = certificatestatus;
+        this.certstatuses = certstatuses;
         this.orderreqs = orderreqs;
     }
 
@@ -135,8 +134,8 @@ public class Certuser {
 
 
 
-    public void setCertificatestatus(List<Certificatestatus> certificatestatus) {
-        this.certificatestatus = certificatestatus;
+    public void setCertstatuses(List<Certstatus> certstatuses) {
+        this.certstatuses = certstatuses;
     }
 
     public void setOrderreqs(List<Orderreq> orderreqs) {

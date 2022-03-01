@@ -1,12 +1,10 @@
 package com.example.certifinder.service;
 
 import com.example.certifinder.exception.BadRequestException;
-import com.example.certifinder.model.Certificatestatus;
+import com.example.certifinder.model.Certstatus;
 import com.example.certifinder.model.Certuser;
-import com.example.certifinder.repository.CertificateRepository;
-import com.example.certifinder.repository.CertificatestatusRepository;
+import com.example.certifinder.repository.CertstatusRepository;
 import com.example.certifinder.repository.CertuserRepository;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,13 +15,13 @@ import java.util.Optional;
 public class CertuserService {
 
     private final CertuserRepository certuserRepository;
-    private final CertificatestatusRepository certificatestatusRepository;
+    private final CertstatusRepository certstatusRepository;
 
 
     @Autowired
-    public CertuserService(CertuserRepository certuserRepository, CertificatestatusRepository certificatestatusRepository) {
+    public CertuserService(CertuserRepository certuserRepository, CertstatusRepository certstatusRepository) {
         this.certuserRepository = certuserRepository;
-        this.certificatestatusRepository = certificatestatusRepository;
+        this.certstatusRepository = certstatusRepository;
     }
 
     public List<Certuser> getCertuser(){
@@ -46,9 +44,9 @@ public class CertuserService {
     public void deleteCertuser(Long certuserId){
        Optional<Certuser> certuser = certuserRepository.findById(certuserId);
 
-       List<Certificatestatus> certificatestatuses =
-               certificatestatusRepository.findCertificatestatusByCertuser(certuser.get());
-       certificatestatusRepository.deleteAll(certificatestatuses);
+       List<Certstatus> certstatuses =
+               certstatusRepository.findCertificatestatusByCertuser(certuser.get());
+       certstatusRepository.deleteAll(certstatuses);
        certuserRepository.deleteById(certuserId);
 
     }

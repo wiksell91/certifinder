@@ -1,10 +1,10 @@
 package com.example.certifinder.service;
 
 import com.example.certifinder.model.Certificate;
-import com.example.certifinder.model.Certificatestatus;
+import com.example.certifinder.model.Certstatus;
 import com.example.certifinder.model.Certuser;
 import com.example.certifinder.repository.CertificateRepository;
-import com.example.certifinder.repository.CertificatestatusRepository;
+import com.example.certifinder.repository.CertstatusRepository;
 import com.example.certifinder.repository.CertuserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,45 +14,45 @@ import java.util.Optional;
 
 
 @Service
-public class CertificatestatusService {
+public class CertService {
 
-     private  final CertificatestatusRepository certificatestatusRepository;
+     private  final CertstatusRepository certstatusRepository;
      private final CertificateRepository certificateRepository;
      private final CertuserRepository certuserRepository;
 
      @Autowired
-     public CertificatestatusService(CertificatestatusRepository certificatestatusRepository, CertificateRepository certificateRepository, CertuserRepository certuserRepository) {
-          this.certificatestatusRepository = certificatestatusRepository;
+     public CertService(CertstatusRepository certstatusRepository, CertificateRepository certificateRepository, CertuserRepository certuserRepository) {
+          this.certstatusRepository = certstatusRepository;
           this.certificateRepository = certificateRepository;
           this.certuserRepository = certuserRepository;
      }
 
-     public List<Certificatestatus> getAllCertstatus(){
-          return certificatestatusRepository.findAll();
+     public List<Certstatus> getAllCertstatus(){
+          return certstatusRepository.findAll();
      }
 
-     public void addCertstatus(Certificatestatus certificatestatus, Long certuserId, Long certificateId){
+     public void addCertstatus(Certstatus certstatus, Long certuserId, Long certificateId){
           Certuser certuser = certuserRepository.findById(certuserId).get();
-          certificatestatus.setCertuser(certuser);
+          certstatus.setCertuser(certuser);
           Certificate certificate = certificateRepository.findById(certificateId).get();
-          certificatestatus.setCertificate(certificate);
+          certstatus.setCertificate(certificate);
 
 
-          certificatestatusRepository.save(certificatestatus);
+          certstatusRepository.save(certstatus);
      }
 
-     public List<Certificatestatus> getCert(String certType){
+     public List<Certstatus> getCert(String certType){
           Optional<Certificate> cert = certificateRepository.findCertByType(certType);
 
-          return certificatestatusRepository.findCertificatestatusByCertificate(cert.get());
+          return certstatusRepository.findCertificatestatusByCertificate(cert.get());
 
      }
 
 
-     public List<Certificatestatus> getUsersCert(String username){
+     public List<Certstatus> getUsersCert(String username){
           Optional<Certuser> certuser = certuserRepository.findUserByUsername(username);
 
-          return certificatestatusRepository.findCertificatestatusByCertuser(certuser.get());
+          return certstatusRepository.findCertificatestatusByCertuser(certuser.get());
 
      }
 

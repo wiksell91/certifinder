@@ -10,17 +10,17 @@ import java.time.LocalDate;
 @ToString
 @Entity
 @Table
-public class Certificatestatus {
+public class Certstatus {
 
     @Id
     @SequenceGenerator(
-            name = "certificatestatus_sequence",
-            sequenceName = "certificatestatus_sequence",
+            name = "certstatus_sequence",
+            sequenceName = "certstatus_sequence",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "certificatestatus_sequence"
+            generator = "certstatus_sequence"
     )
     private Long id;
 
@@ -36,10 +36,10 @@ public class Certificatestatus {
     private String regnumber;
     private String generalinfo;
 
-    public Certificatestatus() {
+    public Certstatus() {
     }
 
-        public Certificatestatus(LocalDate validto, String regnumber, Certuser certuser, Certificate certificate, String generalinfo) {
+        public Certstatus(LocalDate validto, String regnumber, Certuser certuser, Certificate certificate, String generalinfo) {
         this.validto = validto;
         this.regnumber = regnumber;
         this.certuser = certuser;
