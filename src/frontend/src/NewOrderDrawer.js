@@ -9,30 +9,27 @@ const {Option} = Select;
 
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
-function NewOrderDrawer({showDrawer, setShowDrawer, fetchCertuser}) {
+function NewOrderDrawer({showDrawer, setShowDrawer, onClose,fetchOrderreqs, certuserId, fetchCertstatus}) {
     const onCLose = () => setShowDrawer(false);
     const [submitting, setSubmitting] = useState(false);
 
 
-    const onFinish = (certuserId, orderreq) => {
+    const onFinish = orderreq => {
         setSubmitting(true)
         addNewOrder(certuserId, orderreq)
             .then(() => {
-                console.log("student added")
                 onCLose();
-                successNotification(
-                    "Student successfully added"
-                )
-                fetchCertuser();
+           //     successNotification(
+             //       "Förfrågan skickad"
+              //  )
+                fetchOrderreqs();
+                fetchCertstatus();
             }).catch(err => {
             console.log(err)
         }).finally(() => {
             setSubmitting(false);
         })
     };
-
-
-
 
 
     const onFinishFailed = errorInfo => {

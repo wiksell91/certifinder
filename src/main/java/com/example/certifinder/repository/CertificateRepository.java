@@ -13,6 +13,7 @@ import java.util.Optional;
 @Repository
 public interface CertificateRepository extends JpaRepository<Certificate, Long> {
 
+
     @Query("" +
             "SELECT CASE WHEN COUNT(c) > 0 THEN " +
             "TRUE ELSE FALSE END " +

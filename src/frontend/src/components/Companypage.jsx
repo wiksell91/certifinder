@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {addNewOrder, getAllCert, getAllOrders} from "../client";
-import {Button, Empty, Layout, Menu, Radio, Spin, Table, Popconfirm} from "antd";
+import {Button, Empty, Layout, Menu, Radio, Spin, Table, Popconfirm, Input, Drawer, Form, Row, Col, Select} from "antd";
 import NewOrderDrawer from "../NewOrderDrawer";
 import {ContactsOutlined, LoadingOutlined, MailOutlined, UploadOutlined, UserOutlined} from "@ant-design/icons";
 import {successNotification, errorNotification} from "../Notification";
@@ -11,108 +11,94 @@ const {Header, Content, Footer, Sider} = Layout;
 
 
 
-
-
-const NewOrder = (rowKey) => {
-
-    const [showDrawer, setShowDrawer] = useState(false);
-   return <NewOrderDrawer
-        showDrawer = {showDrawer}
-        setShowDrawer = {setShowDrawer}
-       // rowKe = {rowKey}
-    />
-
-};
-
-
-
-const users  =   [
-    {
-        title: 'Namn',
-        dataIndex: ['certuser', 'name'],
-        key: 'name',
-    },
-    {
-        title: 'Ålder',
-        dataIndex: ['certuser', 'age'],
-        key: 'age',
-    },
-    {
-        title: 'Stad',
-        dataIndex: ['certuser', 'city'],
-        key: 'city',
-    },
-    {
-        title: 'Mail',
-        dataIndex: ['certuser', 'email'],
-        key: 'email',
-    },
-    {
-        title: 'Behörighet',
-        dataIndex: ['certificate', 'certType'],
-        key: 'cert_type',
-    },
-    {
-        title: 'Giltig t.o.m',
-        dataIndex: 'validto',
-        key: 'validto',
-    },
-
-    {
-        title: 'Boka',
-        key: 'action',
-        render: (text, certstatus) =>
-            <Radio.Group>
-                <Popconfirm
-                    placement='topRight'
-                    title={`Är du säker på att du vill boka ${certstatus.certuser.name}`}
-                    onConfirm={() => NewOrder()}
-                    okText='Japp'
-                    cancelText='Nä fan..'>
-                    <Radio.Button value="small">Boka Certuser</Radio.Button>
-                </Popconfirm>
-            </Radio.Group>
-
-
-    }
-];
-
-const orders = [
-    {
-        title: 'Namn',
-        dataIndex: ['certuser', 'name'],
-        key: 'name',
-    },
-    {
-        title: 'Behörighetstyp',
-        dataIndex: 'ordertype',
-        key: 'ordertype',
-    },
-    {
-        title: 'Kommentar',
-        dataIndex:  'comment',
-        key: 'comment',
-    },
-    {
-        title: 'Arbetsdatum',
-        dataIndex:  'orderdate',
-        key: 'orderdate',
-    },
-    {
-        title: 'Företag',
-        dataIndex: ['company', 'companyname'],
-        key: 'companyname',
-    },
-
-];
-
 function Companypage(){
     const [certstatus, setCertstatus] = useState([]);
     const [orderreqs, setOrderreqs] = useState([]);
     const [fetching, setFetching] = useState(true);
-
+    const [showDrawer, setShowDrawer] = useState(false);
     const antIcon = <LoadingOutlined style={{fontSize: 24}} spin/>;
+    const [certuserId, setCertuserId] = useState(null);
 
+
+    const orders = [
+        {
+            title: 'Namn',
+            dataIndex: ['certuser', 'name'],
+            key: 'name',
+        },
+        {
+            title: 'Behörighetstyp',
+            dataIndex: 'ordertype',
+            key: 'ordertype',
+        },
+        {
+            title: 'Kommentar',
+            dataIndex:  'comment',
+            key: 'comment',
+        },
+        {
+            title: 'Arbetsdatum',
+            dataIndex:  'orderdate',
+            key: 'orderdate',
+        },
+        {
+            title: 'Företag',
+            dataIndex: ['company', 'companyname'],
+            key: 'companyname',
+        },
+
+    ];
+
+
+
+    const users  =  [
+        {
+            title: 'Namn',
+            dataIndex: ['certuser', 'name'],
+            key: 'name',
+        },
+        {
+            title: 'Ålder',
+            dataIndex: ['certuser', 'age'],
+            key: 'age',
+        },
+        {
+            title: 'Stad',
+            dataIndex: ['certuser', 'city'],
+            key: 'city',
+        },
+        {
+            title: 'Mail',
+            dataIndex: ['certuser', 'email'],
+            key: 'email',
+        },
+        {
+            title: 'Behörighet',
+            dataIndex: ['certificate', 'certType'],
+            key: 'cert_type',
+        },
+        {
+            title: 'Giltig t.o.m',
+            dataIndex: 'validto',
+            key: 'validto',
+        },
+
+        {
+            title: 'Boka',
+            key: 'action',
+            render: (text, certstatus) =>
+                <Radio.Group>
+                    <Radio.Button  value="small"onClick={() => {
+                        setCertuserId(certstatus.certuser.id)
+                        setShowDrawer(!showDrawer)}}
+                    >Book</Radio.Button>
+
+                </Radio.Group>
+
+
+
+        }
+    ];
 
 
     const fetchCertstatus = () =>
@@ -143,7 +129,17 @@ function Companypage(){
             return <Empty />;
         }
 
-        return <Table dataSource={certstatus}
+        return <>
+            <NewOrderDrawer
+                showDrawer={showDrawer}
+                setShowDrawer={setShowDrawer}
+                fetchOrderreqs={fetchOrderreqs}
+                fetchCertstatus={fetchCertstatus}
+                certuserId = {certuserId}
+                onClose={onclose}
+
+            />
+        <Table dataSource={certstatus}
                       columns={users}
                       bordered
                       title={() => 'Våra Certifinders'}
@@ -151,15 +147,24 @@ function Companypage(){
             //scroll={{y:250}}
                       rowKey={(certstatus) => certstatus.certuser.id}
         />
+            </>
     }
 
     const fetchOrderreqs = () =>
         getAllOrders()
             .then(res => res.json())
-            .then(data => {
-                setOrderreqs(data);
-                setFetching(false)
-            })
+        .then(data => {
+            setOrderreqs(data);
+        }).catch(err => {
+        console.log(err.response)
+        err.response.json().then(res => {
+            console.log(res);
+            errorNotification(
+                "There was an issue",
+                `${res.message} [${res.status}] [${res.error}]`
+            )
+        });
+    }).finally(() => setFetching(false))
 
     useEffect(() => {
         fetchOrderreqs();
@@ -180,6 +185,7 @@ function Companypage(){
             //scroll={{y:250}}
                       rowKey={(orderreqs) => orderreqs.id}
         />;
+
     }
     const [selectedMenuItem, setSelectedMenuItem] = useState("1")
     const handleItemClick = (key) => {
