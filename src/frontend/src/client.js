@@ -23,7 +23,7 @@ export const getAllOrders = () =>
     fetch("/api/v1/orderreq")
     .then(checkStatus)
 
-export const addNewOrder = (certuserId, orderreq) =>{
+export const addNewOrder = (certuserId, orderreq) =>
         fetch(`/api/v1/orderreq/addorder/user/${certuserId}/company/1`,{
         headers: {
             'Content-Type': 'application/json'
@@ -31,5 +31,5 @@ export const addNewOrder = (certuserId, orderreq) =>{
         method: 'POST',
             body: JSON.stringify(orderreq)
         })
-        .then(checkStatus);
-}
+        .then(checkStatus)
+

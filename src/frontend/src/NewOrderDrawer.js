@@ -9,7 +9,7 @@ const {Option} = Select;
 
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
-function NewOrderDrawer({showDrawer, setShowDrawer, onClose,fetchOrderreqs, certuserId, fetchCertstatus}) {
+function NewOrderDrawer({showDrawer, setShowDrawer, certuserId, fetchCertstatus}) {
     const onCLose = () => setShowDrawer(false);
     const [submitting, setSubmitting] = useState(false);
 
@@ -19,13 +19,20 @@ function NewOrderDrawer({showDrawer, setShowDrawer, onClose,fetchOrderreqs, cert
         addNewOrder(certuserId, orderreq)
             .then(() => {
                 onCLose();
-           //     successNotification(
-             //       "Förfrågan skickad"
-              //  )
-                fetchOrderreqs();
+                successNotification(
+                    "Förfrågan skickad"
+                )
+                //fetchOrderreqs();
                 fetchCertstatus();
             }).catch(err => {
-            console.log(err)
+            err.response.json().then(res => {
+                console.log(err);
+                errorNotification(
+                    "There was an issue",
+                    `${res.message} [${res.status}] [${res.error}]`,
+                    "bottomLeft"
+                )
+            });
         }).finally(() => {
             setSubmitting(false);
         })
@@ -35,8 +42,8 @@ function NewOrderDrawer({showDrawer, setShowDrawer, onClose,fetchOrderreqs, cert
     const onFinishFailed = errorInfo => {
         alert(JSON.stringify(errorInfo, null, 2));
     };
-    const { TextArea } = Input;
 
+    const { TextArea } = Input;
     return <Drawer
         title="Skapa ny förfrågan"
         width={720}
@@ -59,8 +66,8 @@ function NewOrderDrawer({showDrawer, setShowDrawer, onClose,fetchOrderreqs, cert
               onFinishFailed={onFinishFailed}
               onFinish={onFinish}
               hideRequiredMark>
-            <Row gutter={16}>
-                <Col span={12}>
+            <Row gutter={12}>
+                <Col span={8}>
                     <Form.Item
                         name="orderstatus"
                         label="status"
@@ -70,8 +77,7 @@ function NewOrderDrawer({showDrawer, setShowDrawer, onClose,fetchOrderreqs, cert
                         </Select>
                     </Form.Item>
                 </Col>
-                <Row gutter={16}>
-                <Col span={12}>
+                <Col span={8}>
                     <Form.Item
                         name="ordertype"
                         label="Ordertyp"
@@ -95,8 +101,14 @@ function NewOrderDrawer({showDrawer, setShowDrawer, onClose,fetchOrderreqs, cert
                         <TextArea placeholder="Vänligen beskriv arbetet"/>
                     </Form.Item>
                 </Col>
-            </Row>
-
+            <Col span={12}>
+                <Form.Item
+                    name="orderdate"
+                    label="Orderdatum"
+                >
+                    <Input placeholder="Ange datum för arbete"/>
+                </Form.Item>
+            </Col>
             <Row>
                 <Col span={12}>
                     <Form.Item >

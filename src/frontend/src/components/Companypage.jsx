@@ -1,55 +1,57 @@
-import {useEffect, useState} from "react";
-import {addNewOrder, getAllCert, getAllOrders} from "../client";
-import {Button, Empty, Layout, Menu, Radio, Spin, Table, Popconfirm, Input, Drawer, Form, Row, Col, Select} from "antd";
+import {useState, useEffect} from "react";
+import {getAllCert, getAllOrders} from "../client";
+import {Empty, Layout, Menu, Radio, Spin, Table} from "antd";
 import NewOrderDrawer from "../NewOrderDrawer";
 import {ContactsOutlined, LoadingOutlined, MailOutlined, UploadOutlined, UserOutlined} from "@ant-design/icons";
-import {successNotification, errorNotification} from "../Notification";
 import '../App.css';
+import {errorNotification, successNotification} from "../Notification";
 
 
 const {Header, Content, Footer, Sider} = Layout;
 
 
+const orders =  [
+    {
+        title: 'Namn',
+        dataIndex: ['certuser', 'name'],
+        key: 'name',
+    },
+    {
+        title: 'Behörighetstyp',
+        dataIndex: 'ordertype',
+        key: 'ordertype',
+    },
+    {
+        title: 'Kommentar',
+        dataIndex:  'comment',
+        key: 'comment',
+    },
+    {
+        title: 'Arbetsdatum',
+        dataIndex:  'orderdate',
+        key: 'orderdate',
+    },
+    {
+        title: 'Företag',
+        dataIndex: ['company', 'companyname'],
+        key: 'companyname',
+    },
+    {
+        title: 'Orderstatus',
+        dataIndex: 'status',
+        key: 'status'
+    },
+];
+
+
+const antIcon = <LoadingOutlined style={{fontSize: 24}} spin/>;
 
 function Companypage(){
     const [certstatus, setCertstatus] = useState([]);
     const [orderreqs, setOrderreqs] = useState([]);
     const [fetching, setFetching] = useState(true);
     const [showDrawer, setShowDrawer] = useState(false);
-    const antIcon = <LoadingOutlined style={{fontSize: 24}} spin/>;
     const [certuserId, setCertuserId] = useState(null);
-
-
-    const orders = [
-        {
-            title: 'Namn',
-            dataIndex: ['certuser', 'name'],
-            key: 'name',
-        },
-        {
-            title: 'Behörighetstyp',
-            dataIndex: 'ordertype',
-            key: 'ordertype',
-        },
-        {
-            title: 'Kommentar',
-            dataIndex:  'comment',
-            key: 'comment',
-        },
-        {
-            title: 'Arbetsdatum',
-            dataIndex:  'orderdate',
-            key: 'orderdate',
-        },
-        {
-            title: 'Företag',
-            dataIndex: ['company', 'companyname'],
-            key: 'companyname',
-        },
-
-    ];
-
-
 
     const users  =  [
         {
@@ -95,16 +97,16 @@ function Companypage(){
 
                 </Radio.Group>
 
-
-
         }
     ];
+
 
 
     const fetchCertstatus = () =>
         getAllCert()
             .then(res => res.json())
             .then(data => {
+                console.log(data);
                 setCertstatus(data);
             }).catch(err => {
                     console.log(err.response)
@@ -128,15 +130,13 @@ function Companypage(){
         if (certstatus.length <= 0) {
             return <Empty />;
         }
-
         return <>
             <NewOrderDrawer
                 showDrawer={showDrawer}
                 setShowDrawer={setShowDrawer}
-                fetchOrderreqs={fetchOrderreqs}
-                fetchCertstatus={fetchCertstatus}
+               // fetchOrderreqs={fetchOrderreqs}
                 certuserId = {certuserId}
-                onClose={onclose}
+                fetchCertstatus={fetchCertstatus}
 
             />
         <Table dataSource={certstatus}
@@ -187,17 +187,19 @@ function Companypage(){
         />;
 
     }
+
+
     const [selectedMenuItem, setSelectedMenuItem] = useState("1")
     const handleItemClick = (key) => {
         switch (key) {
             case "1":
                 return renderCertstatus();
             case "2":
-                return renderOrderreqs();
+                return  renderOrderreqs();
             case "3":
                 return "feeeeeeliyggi";
             case "4":
-                return "feeeeeel";
+                return "fitta";
             default:
                 break;
 
