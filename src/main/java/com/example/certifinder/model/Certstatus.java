@@ -10,6 +10,10 @@ import java.time.LocalDate;
 @ToString
 @Entity
 @Table
+@Getter
+@Setter
+@EqualsAndHashCode
+@NoArgsConstructor
 public class Certstatus {
 
     @Id
@@ -36,64 +40,8 @@ public class Certstatus {
     private String regnumber;
     private String generalinfo;
 
-    public Certstatus() {
-    }
-
-        public Certstatus(LocalDate validto, String regnumber, Certuser certuser, Certificate certificate, String generalinfo) {
-        this.validto = validto;
-        this.regnumber = regnumber;
-        this.certuser = certuser;
-        this.certificate = certificate;
-        this.generalinfo = generalinfo;
-
-    }
 
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
-    public LocalDate getValidto() {
-        return validto;
-    }
-
-    public void setValidto(LocalDate validto) {
-        this.validto = validto;
-    }
-
-    public String getRegnumber() {
-        return regnumber;
-    }
-
-    public void setRegnumber(String regnumber) {
-        this.regnumber = regnumber;
-    }
-
-    public String getGeneralinfo() {
-        return generalinfo;
-    }
-
-    public void setGeneralinfo(String generalinfo) {
-        this.generalinfo = generalinfo;
-    }
-
-    public Certificate getCertificate() {
-        return certificate;
-    }
-
-    public void setCertificate(Certificate certificate) {
-        this.certificate = certificate;
-    }
-
-    public Certuser getCertuser() {
-        return certuser;
-    }
-
-    public void setCertuser(Certuser certuser) {
-        this.certuser = certuser;
-    }
 }

@@ -43,14 +43,14 @@ public class OrderreqService {
 
     }
 
-    public List<Orderreq> getCompanyOrders(String companyname){
-        Optional<Company> comp = companyRepository.findCompanyByCompanyname(companyname);
+    public List<Orderreq> getCompanyOrders(String email){
+        Optional<Company> comp = companyRepository.findByEmail(email);
 
         return orderreqRepository.findOrderreqByCompany(comp.get());
     }
 
-    public List<Orderreq> getUsersOrders(String username){
-        Optional<Certuser> certuser = certuserRepository.findUserByUsername(username);
+    public List<Orderreq> getUsersOrders(String email){
+        Optional<Certuser> certuser = certuserRepository.findByEmail(email);
         return orderreqRepository.findOrderreqByCertuser(certuser.get());
     }
 

@@ -3,11 +3,14 @@ package com.example.certifinder.repository;
 
 import com.example.certifinder.model.Company;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@Transactional(readOnly = true)
 @Repository
 public interface CompanyRepository extends JpaRepository<Company, Long> {
 
@@ -15,17 +18,17 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
             "SELECT CASE WHEN COUNT(c) > 0 THEN " +
             "TRUE ELSE FALSE END " +
             "FROM Company c " +
-            "WHERE c.companyname = ?1"
+            "WHERE c.fullName = ?1"
     )
     Boolean selectExistsCompany(String companyname);
 
-    @Query("" +
-            "SELECT CASE WHEN COUNT(o) > 0 THEN " +
-            "TRUE ELSE FALSE END " +
-            "FROM Company o " +
-            "WHERE o.orgnumber = ?1"
-    )
-    Boolean selectExistsOrgnumber(String orgnumber);
 
-    Optional<Company> findCompanyByCompanyname(String companyname);
+
+    Optional<Company> findByEmail(String email);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Company c " +
+            "SET c.enabled = TRUE WHERE c.email = ?1")
+    int enableCompany(String email);
 }

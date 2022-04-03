@@ -2,43 +2,51 @@ package com.example.certifinder.model;
 
 
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
+
+@Getter
+@Setter
+@EqualsAndHashCode
+@NoArgsConstructor
 @ToString
 @Entity
 @Table
-public class Certuser {
+public class Certuser implements UserDetails {
 
     @Id
     @SequenceGenerator(
-            name = "certuser_sequence",
-            sequenceName = "certuser_sequence",
+            name = "user_sequence",
+            sequenceName = "user_sequence",
             allocationSize = 1
 
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "certuser_sequence"
+            generator = "user_sequence"
     )
     private Long id;
-   // @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
     @Column(nullable = false, unique = true)
-    private String username;
-    //@Column(nullable = false)
     private String password;
     //@Column(nullable = false)
-    private String name;
-    //@Enumerated(EnumType.STRING)
-    //@Column(nullable = false)
+    private String fullName;
+
+    @Column(nullable = false)
     private Role role;
     //@Column(nullable = false)
-    private Integer age;
-    //@Column(nullable = false)
     private String city;
+    private Boolean locked = false;
+    private Boolean enabled = false;
 
 
     @OneToMany(mappedBy = "certuser",
@@ -53,92 +61,52 @@ public class Certuser {
     private List<Orderreq> orderreqs = new ArrayList<>();
 
 
-    public Certuser(String email, String password, String username, String name, Role role, Integer age, String city, List<Certstatus> certstatuses, List<Orderreq> orderreqs) {
+    public Certuser(String email, String password, String fullName, Role role, String city) {
         this.email = email;
         this.password = password;
-        this.username = username;
-        this.name = name;
+        this.fullName = fullName;
         this.role = role;
-        this.age = age;
         this.city = city;
-        this.certstatuses = certstatuses;
-        this.orderreqs = orderreqs;
     }
 
-    public Certuser() {
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.name());
+        return Collections.singletonList(authority);
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
+    @Override
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    @Override
+    public String getUsername() {
+        return email;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
+    public String getFullName() {
+        return fullName;
     }
 
 
-
-    public void setCertstatuses(List<Certstatus> certstatuses) {
-        this.certstatuses = certstatuses;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
-    public void setOrderreqs(List<Orderreq> orderreqs) {
-        this.orderreqs = orderreqs;
+    @Override
+    public boolean isAccountNonLocked() {
+        return !locked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
     }
 }

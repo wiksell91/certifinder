@@ -49,8 +49,8 @@ public class CertService {
      }
 
 
-     public List<Certstatus> getUsersCert(String username){
-          Optional<Certuser> certuser = certuserRepository.findUserByUsername(username);
+     public List<Certstatus> getUsersCert(String email){
+          Optional<Certuser> certuser = certuserRepository.findByEmail(email);
 
           return certstatusRepository.findCertificatestatusByCertuser(certuser.get());
 

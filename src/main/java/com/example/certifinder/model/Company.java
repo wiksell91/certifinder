@@ -3,24 +3,37 @@ package com.example.certifinder.model;
 
 
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 
-@Table
+@Getter
+@Setter
+@EqualsAndHashCode
+@NoArgsConstructor
 @Entity
-public class  Company {
+public class  Company implements UserDetails {
     @Id
     @SequenceGenerator(
-            name = "company_sequence",
-            sequenceName = "company_sequence",
+            name = "user_sequence",
+            sequenceName = "user_sequence",
             allocationSize = 1
 
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "company_sequence"
+            generator = "user_sequence"
     )
     private Long id;
 
@@ -30,62 +43,60 @@ public class  Company {
     private List<Orderreq> orderreqs = new ArrayList<>();
 
 
-    private String companyname;
-    private String orgnumber;
+    private String fullName;
+    private String email;
+    private String password;
     private String city;
+    @Enumerated(EnumType.STRING)
     private Role role;
+    private Boolean locked = false;
+    private Boolean enabled = false;
 
-    public Company(String companyname, String orgnumber, String city, Role role) {
-        this.companyname = companyname;
-        this.orgnumber = orgnumber;
+    public Company(String fullName, String email, String password, String city, Role role) {
+        this.fullName = fullName;
+        this.email = email;
+        this.password = password;
         this.city = city;
         this.role = role;
     }
 
-    public Company() {
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.name());
+        return Collections.singletonList(authority);
     }
 
-    public Long getId() {
-        return id;
+    @Override
+    public String getPassword() {
+        return password;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    @Override
+    public String getUsername() {
+        return email;
     }
 
-    public String getCompanyname() {
-        return companyname;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setCompanyname(String companyname) {
-        this.companyname = companyname;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
-    public String getOrgnumber() {
-        return orgnumber;
+    @Override
+    public boolean isAccountNonLocked() {
+        return !locked;
     }
 
-    public void setOrgnumber(String orgnumber) {
-        this.orgnumber = orgnumber;
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
     }
 
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public void setOrderreqs(List<Orderreq> orderreqs) {
-        this.orderreqs = orderreqs;
+    @Override
+    public boolean isEnabled() {
+        return enabled;
     }
 }
