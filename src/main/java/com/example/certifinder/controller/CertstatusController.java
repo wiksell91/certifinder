@@ -2,12 +2,13 @@ package com.example.certifinder.controller;
 
 import com.example.certifinder.model.Certstatus;
 import com.example.certifinder.service.CertService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
+@RequiredArgsConstructor
 @RestController
 @RequestMapping(path = "/api/v1/certstatus")
 public class CertstatusController {
@@ -15,10 +16,6 @@ public class CertstatusController {
 
     private final CertService certService;
 
-    @Autowired
-    public CertstatusController(CertService certService) {
-        this.certService = certService;
-    }
 
     @GetMapping
     public List<Certstatus> getAllCertstatus(){

@@ -3,87 +3,85 @@ package com.example.certifinder.service;
 import com.example.certifinder.exception.BadRequestException;
 import com.example.certifinder.model.Certstatus;
 import com.example.certifinder.model.Certuser;
-import com.example.certifinder.registration.token.ConfirmationUserToken;
-import com.example.certifinder.registration.token.ConfirmationTokenService;
+
+import com.example.certifinder.model.Role;
 import com.example.certifinder.repository.CertstatusRepository;
 import com.example.certifinder.repository.CertuserRepository;
+import com.example.certifinder.repository.RoleRepo;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
+@Slf4j
+@Transactional
 @Service
 @AllArgsConstructor
 public class CertuserService implements UserDetailsService {
 
-    private final static String USER_NOT_FOUND_MSG = "user with email %s not found";
+
     private final CertuserRepository certuserRepository;
     private final CertstatusRepository certstatusRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final ConfirmationTokenService confirmationTokenService;
+    private final RoleRepo roleRepo;
+    private final PasswordEncoder passwordEncoder;
 
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return certuserRepository.findByEmail(email)
-                .orElseThrow(()-> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
-
-    }
-
-    public String signUpUser(Certuser certuser){
-        boolean userExist = certuserRepository.findByEmail(certuser.getEmail())
-                .isPresent();
-        if(userExist) {
-            throw new IllegalStateException("Email is already taken");
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Certuser certuser = certuserRepository.findCertuserByEmail(username);
+        if(certuser == null){
+            throw new UsernameNotFoundException("Användaren finns inte");
+        }else {
+            log.info("Användaren hittades");
         }
-        String encodedPassword = bCryptPasswordEncoder.encode(certuser.getPassword());
-
-        certuser.setPassword(encodedPassword);
-
-        certuserRepository.save(certuser);
-
-        String token = UUID.randomUUID().toString();
-        ConfirmationUserToken confirmationUserToken = new ConfirmationUserToken(
-                token,
-                LocalDateTime.now(),
-                LocalDateTime.now().plusMinutes(15),
-                certuser
-        );
-
-        confirmationTokenService.saveConfirmationUserToken(
-                confirmationUserToken
-        );
-
-        return token;
+        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        certuser.getRoles().forEach(role -> {
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
+        });
+        return new org.springframework.security.core.userdetails.User(certuser.getEmail(), certuser.getPassword(), authorities);
     }
 
-    public int enablecertuser(String email) {
-        return certuserRepository.enableCertuser(email);
-    }
-
-    public List<Certuser> getCertuser(){
+    public List<Certuser> getAllCertuser(){
         return certuserRepository.findAll();
     }
 
 
-    public void addCertuser(Certuser certuser) {
+    public Certuser addCertuser(Certuser certuser) {
         Boolean existsEmail = certuserRepository
                 .selectExistsEmail(certuser.getEmail());
-
         if (existsEmail){
             throw new BadRequestException(
                     "Email " + certuser.getEmail() + " är upptaget");
         }
-
-        certuserRepository.save(certuser);
+        certuser.setPassword(passwordEncoder.encode(certuser.getPassword()));
+        return certuserRepository.save(certuser);
     }
+
+    public Role saveRole(Role role){
+        return roleRepo.save(role);
+    }
+
+    public void addRoleToUser(String email, String roleName){
+        Certuser certuser = certuserRepository.findCertuserByEmail(email);
+        Role role = roleRepo.findByName(roleName);
+        certuser.getRoles().add(role);
+
+    }
+
+    public Certuser getCertuser(String email){
+        return certuserRepository.findCertuserByEmail(email);
+    }
+
 
     public void deleteCertuser(Long certuserId){
        Optional<Certuser> certuser = certuserRepository.findById(certuserId);

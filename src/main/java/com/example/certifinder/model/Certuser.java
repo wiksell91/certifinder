@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-
+@AllArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode
@@ -20,7 +20,7 @@ import java.util.List;
 @ToString
 @Entity
 @Table
-public class Certuser implements UserDetails {
+public class Certuser  {
 
     @Id
     @SequenceGenerator(
@@ -41,12 +41,12 @@ public class Certuser implements UserDetails {
     //@Column(nullable = false)
     private String fullName;
 
-    @Column(nullable = false)
-    private Role role;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Collection<Role> roles = new ArrayList<>();
+
     //@Column(nullable = false)
     private String city;
-    private Boolean locked = false;
-    private Boolean enabled = false;
+
 
 
     @OneToMany(mappedBy = "certuser",
@@ -60,53 +60,18 @@ public class Certuser implements UserDetails {
             orphanRemoval = true)
     private List<Orderreq> orderreqs = new ArrayList<>();
 
-
-    public Certuser(String email, String password, String fullName, Role role, String city) {
+    public Certuser(Long id, String email, String password, String fullName, Collection<Role> roles, String city) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.fullName = fullName;
-        this.role = role;
+        this.roles = roles;
         this.city = city;
     }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.name());
-        return Collections.singletonList(authority);
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return !locked;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
 }
+
+
+
+
+
+

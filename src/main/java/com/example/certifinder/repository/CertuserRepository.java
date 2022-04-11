@@ -24,15 +24,10 @@ public interface CertuserRepository extends JpaRepository<Certuser, Long> {
     )
     Boolean selectExistsEmail(String email);
 
-
+    Certuser findCertuserByEmail(String email);
 
     Optional<Certuser> findByEmail(String email);
 
-    @Transactional
-    @Modifying
-    @Query("UPDATE Certuser c " +
-            "SET c.enabled = TRUE WHERE c.email = ?1")
-    int enableCertuser(String email);
 }
 
 

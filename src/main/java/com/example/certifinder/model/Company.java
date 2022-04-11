@@ -47,23 +47,13 @@ public class  Company implements UserDetails {
     private String email;
     private String password;
     private String city;
-    @Enumerated(EnumType.STRING)
-    private Role role;
     private Boolean locked = false;
     private Boolean enabled = false;
 
-    public Company(String fullName, String email, String password, String city, Role role) {
-        this.fullName = fullName;
-        this.email = email;
-        this.password = password;
-        this.city = city;
-        this.role = role;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.name());
-        return Collections.singletonList(authority);
+        return null;
     }
 
     @Override
