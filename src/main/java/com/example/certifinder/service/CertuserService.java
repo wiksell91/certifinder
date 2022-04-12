@@ -4,10 +4,8 @@ import com.example.certifinder.exception.BadRequestException;
 import com.example.certifinder.model.Certstatus;
 import com.example.certifinder.model.Certuser;
 
-import com.example.certifinder.model.Role;
 import com.example.certifinder.repository.CertstatusRepository;
 import com.example.certifinder.repository.CertuserRepository;
-import com.example.certifinder.repository.RoleRepo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,29 +25,14 @@ import java.util.Optional;
 @Transactional
 @Service
 @AllArgsConstructor
-public class CertuserService implements UserDetailsService {
+public class CertuserService {
 
 
     private final CertuserRepository certuserRepository;
     private final CertstatusRepository certstatusRepository;
-    private final RoleRepo roleRepo;
     private final PasswordEncoder passwordEncoder;
 
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Certuser certuser = certuserRepository.findCertuserByEmail(username);
-        if(certuser == null){
-            throw new UsernameNotFoundException("Användaren finns inte");
-        }else {
-            log.info("Användaren hittades");
-        }
-        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        certuser.getRoles().forEach(role -> {
-            authorities.add(new SimpleGrantedAuthority(role.getName()));
-        });
-        return new org.springframework.security.core.userdetails.User(certuser.getEmail(), certuser.getPassword(), authorities);
-    }
 
     public List<Certuser> getAllCertuser(){
         return certuserRepository.findAll();
@@ -66,17 +49,7 @@ public class CertuserService implements UserDetailsService {
         certuser.setPassword(passwordEncoder.encode(certuser.getPassword()));
         return certuserRepository.save(certuser);
     }
-
-    public Role saveRole(Role role){
-        return roleRepo.save(role);
-    }
-
-    public void addRoleToUser(String email, String roleName){
-        Certuser certuser = certuserRepository.findCertuserByEmail(email);
-        Role role = roleRepo.findByName(roleName);
-        certuser.getRoles().add(role);
-
-    }
+    
 
     public Certuser getCertuser(String email){
         return certuserRepository.findCertuserByEmail(email);

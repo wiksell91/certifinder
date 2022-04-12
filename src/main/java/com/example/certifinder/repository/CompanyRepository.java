@@ -1,6 +1,7 @@
 package com.example.certifinder.repository;
 
 
+import com.example.certifinder.model.Certuser;
 import com.example.certifinder.model.Company;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -22,7 +23,7 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
     )
     Boolean selectExistsCompany(String companyname);
 
-
+    Company findCompanyByEmail(String email);
 
     Optional<Company> findByEmail(String email);
 

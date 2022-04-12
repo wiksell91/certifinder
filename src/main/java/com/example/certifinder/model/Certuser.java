@@ -3,13 +3,13 @@ package com.example.certifinder.model;
 
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+
 import java.util.Collection;
-import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 @AllArgsConstructor
@@ -20,7 +20,7 @@ import java.util.List;
 @ToString
 @Entity
 @Table
-public class Certuser  {
+public class Certuser implements UserDetails {
 
     @Id
     @SequenceGenerator(
@@ -40,9 +40,10 @@ public class Certuser  {
     private String password;
     //@Column(nullable = false)
     private String fullName;
+    private Date createdAt;
+    private Date updatedAt;
+    private boolean enabled;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Collection<Role> roles = new ArrayList<>();
 
     //@Column(nullable = false)
     private String city;
@@ -60,13 +61,45 @@ public class Certuser  {
             orphanRemoval = true)
     private List<Orderreq> orderreqs = new ArrayList<>();
 
-    public Certuser(Long id, String email, String password, String fullName, Collection<Role> roles, String city) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.fullName = fullName;
-        this.roles = roles;
-        this.city = city;
+
+    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @JoinTable(name = "AUTH_USER_AUTHORITY", joinColumns = @JoinColumn(referencedColumnName = "id"),inverseJoinColumns = @JoinColumn(referencedColumnName ="id"))
+    private List<Authority> authorities;
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
 
